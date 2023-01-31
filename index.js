@@ -40,7 +40,7 @@ const middleware = (req, res, next) => {
 };
  */
 app.get("/",(req,res)=>{
-  res.status(200).json("Hello world")
+  res.status(200).json("Hello world :)")
 })
 /* 
 app.post("/register", (req, res) => {
