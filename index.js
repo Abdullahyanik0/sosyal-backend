@@ -35,6 +35,7 @@ app.get("/add-note", async (req, res) => {
         required: "body 2",
       },
     });
+    res.send("add note")
   } catch (error) {
     console.log(error, "errr");
   }
