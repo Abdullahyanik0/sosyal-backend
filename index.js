@@ -80,7 +80,7 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.get("/user", middleware, (req, res) => {
+app.get("/user", (req, res) => {
   User.find({}).then(function (users) {
     res.status(201).json(users);
   });
