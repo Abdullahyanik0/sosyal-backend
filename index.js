@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
-const Books = require("./models/books");
+const Book = require("./models/books");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -25,7 +25,7 @@ app.get("/", (req, res) => {
 
 app.get("/add-note", async (req, res) => {
   try {
-    await Books.insertMany([
+    await Book.insertMany([
       {
         title: "kitap 1",
         required: "body 1",
@@ -35,7 +35,7 @@ app.get("/add-note", async (req, res) => {
         required: "body 2",
       },
     ]);
-    res.send("add note");
+    res.send("add notes");
   } catch (error) {
     console.log(error, "errr");
   }
