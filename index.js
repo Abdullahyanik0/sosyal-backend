@@ -10,8 +10,7 @@ app.use(cors());
 
 app.use(express.json());
 
-
-/* const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
@@ -38,11 +37,11 @@ const middleware = (req, res, next) => {
     }
   }
 };
- */
-app.get("/",(req,res)=>{
-  res.status(200).json("Hello world :)")
-})
-/* 
+
+app.get("/", (req, res) => {
+  res.status(200).json("Hello world. :)");
+});
+
 app.post("/register", (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (user) {
@@ -114,7 +113,7 @@ app.post("/refreshtoken", async (req, res) => {
   } catch (error) {
     return res.status(401).json("tokenın süresi bitti");
   }
-}); */
+});
 
 app.listen(4000, () => {
   mongoose.set("strictQuery", false);
