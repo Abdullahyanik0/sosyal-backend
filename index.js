@@ -7,7 +7,14 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 mongoose.set("strictQuery", false);
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(function(req, res, next) {
+  bodyParser.urlencoded({ extended: true })
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  next();
+});
 
 const connectDB = async () => {
   console.log("bağlandı port");
