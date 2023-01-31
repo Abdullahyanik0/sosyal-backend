@@ -25,17 +25,17 @@ app.get("/", (req, res) => {
 
 app.get("/add-note", async (req, res) => {
   try {
-    await Books.insertMany({
-      title: {
+    await Books.insertMany([
+      {
         title: "kitap 1",
         required: "body 1",
       },
-      body: {
-        title: "kitap 2 ",
+      {
+        title: "kitap 2",
         required: "body 2",
       },
-    });
-    res.send("add note")
+    ]);
+    res.send("add note");
   } catch (error) {
     console.log(error, "errr");
   }
@@ -51,7 +51,7 @@ app.get("/books", async (req, res) => {
 });
 
 connectDB().then(() => {
-  app.listen(PORT,()=>{
+  app.listen(PORT, () => {
     console.log("bağlandı port");
-  })
+  });
 });
