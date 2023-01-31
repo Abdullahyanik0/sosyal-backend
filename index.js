@@ -7,8 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 mongoose.set("strictQuery", false);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use(function (req, res, next) {
-  bodyParser.urlencoded({ extended: true });
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -60,8 +62,7 @@ const middleware = (req, res, next) => {
 };
 
 app.post("/register", (req, res) => {
-  const email = req.body.email;
-  User.findOne({ email: email }, (err, user) => {
+  User.findOne({ email: req.body.email }, (err, user) => {
     if (user) {
       res.status(417).json({ message: "Kullanıcı zaten kayıtlı." });
     } else if (err) {
