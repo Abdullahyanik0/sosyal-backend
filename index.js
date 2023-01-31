@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
+const jwt = require("jsonwebtoken");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -29,6 +30,21 @@ const connectDB = async () => {
   }
 };
 
+const middleware = (req, res, next) => {
+  try {
+    const token = req.headers.token;
+    const decoded = jwt.verify(token, secretKey);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    } else {
+      return res.status(402).json({ message: "Invalid token" });
+    }
+  }
+};
+
 app.get("/", (req, res) => {
   res.send({ title: "hello" });
 });
@@ -46,20 +62,7 @@ const secretKey = "deneme";
 const tokenExpiresIn = "1h";
 const refreshTokenExpiresIn = "24h";
 
-const middleware = (req, res, next) => {
-  try {
-    const token = req.headers.token;
-    const decoded = jwt.verify(token, secretKey);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expired" });
-    } else {
-      return res.status(402).json({ message: "Invalid token" });
-    }
-  }
-};
+
 
 app.post("/register", (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
