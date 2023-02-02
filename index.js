@@ -103,16 +103,13 @@ app.post("/login", (req, res) => {
 app.get("/user/:email", (req, res) => {
   console.log(req.params.email);
 
-  User.findOne({ email: req.params.email }),
-    (err, user) => {
-      if (user) {
-        console.log("var");
-        res.status(200).json(user);
-      } else {
-        console.log("yok");
-        res.status(401).json({ message: "Error" });
-      }
-    };
+  User.findOne({ email: req.params.email }, (err, user) => {
+    if (user) {
+      res.status(201).json({ user: user });
+    } else {
+      res.status(402).json({ message: "Kullanıcı Bulunamadı" });
+    }
+  });
 });
 
 connectDB().then(() => {
