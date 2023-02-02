@@ -100,17 +100,17 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.post("/user/:id", (req, res) => {
-  console.log(req.params);
-  console.log(req.headers);
+app.get("/user/:email", (req, res) => {
+  console.log(req.params.email);
 
-  User.findOne({email: req.params.email }),
+  User.findOne({ email: req.params.email }),
     (err, user) => {
       if (user) {
         console.log("var");
         res.status(200).json(user);
       } else {
-        res.status(400).json({ message: "Error" });
+        console.log("yok");
+        res.status(401).json({ message: "Error" });
       }
     };
 });
