@@ -104,7 +104,7 @@ app.post("/user/:id", (req, res) => {
   console.log(req.params);
   console.log(req.headers);
 
-  User.findOne({ _id: "63da110b1ba6c6b59b056d7e" }),
+  User.findOne({email: req.params.email }),
     (err, user) => {
       if (user) {
         console.log("var");
