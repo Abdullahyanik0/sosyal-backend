@@ -62,8 +62,6 @@ const secretKey = "deneme";
 const tokenExpiresIn = "1h";
 const refreshTokenExpiresIn = "24h";
 
-
-
 app.post("/register", (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (user) {
@@ -93,13 +91,28 @@ app.post("/login", (req, res) => {
     if (user && password === req.body.password) {
       const token = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: tokenExpiresIn });
       const refreshtoken = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: refreshTokenExpiresIn });
-      res.status(201).json({ message: "Giriş Başarılı", token: token, refreshtoken: refreshtoken });
+      res.status(201).json({ message: "Giriş Başarılı", token: token, refreshtoken: refreshtoken, user: user });
     } else if (user && password !== req.body.password) {
       res.status(401).json({ message: "Şifren Yanlış" });
     } else {
       res.status(402).json({ message: "Kullanıcı Bulunamadı" });
     }
   });
+});
+
+app.post("/user/:id", (req, res) => {
+  console.log(req.params);
+  console.log(req.headers);
+
+  User.findOne({ _id: "63da110b1ba6c6b59b056d7e" }),
+    (err, user) => {
+      if (user) {
+        console.log("var");
+        res.status(200).json(user);
+      } else {
+        res.status(400).json({ message: "Error" });
+      }
+    };
 });
 
 connectDB().then(() => {
