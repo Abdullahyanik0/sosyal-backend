@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -62,6 +63,7 @@ const secretKey = "deneme";
 const tokenExpiresIn = "1h";
 const refreshTokenExpiresIn = "24h";
 
+
 app.post("/register", (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
     if (user) {
@@ -69,21 +71,28 @@ app.post("/register", (req, res) => {
     } else if (err) {
       res.status(500).json(err);
     } else {
-      new User({
-        email: req.body.email,
-        password: req.body.password,
-        name: req.body.name,
-        userName: req.body.userName,
-        confirm: req.body.confirm,
-        created_date: req.body.created_date,
-      }).save();
-      res.status(201).json({
-        user: User,
-        message: "Kayıt başarılı.",
+      bcrypt.hash(req.body.password, 10, (err, hash) => {
+        if (err) {
+          res.status(500).json(err);
+        } else {
+          new User({
+            email: req.body.email,
+            password: hash,
+            name: req.body.name,
+            userName: req.body.userName,
+            confirm: req.body.confirm,
+            created_date: req.body.created_date,
+          }).save();
+          res.status(201).json({
+            user: User,
+            message: "Kayıt başarılı.",
+          });
+        }
       });
     }
   });
 });
+
 
 app.post("/login", (req, res) => {
   User.findOne({ email: req.body.email }, (err, user) => {
@@ -102,10 +111,14 @@ app.post("/login", (req, res) => {
 
 app.put("/profile/:id", (req, res) => {
   const userId = req.params.id;
+  const name = req.params.id;
+  const email = req.params.id;
+  const userName = req.params.id;
+  const password = req.params.id;
 
   User.findOneAndUpdate(
     { _id: userId },
-    { $set: { name: req.body.name, email: req.body.email, userName: req.body.userName, password: req.body.password } },
+    { $set: { name: name, email: email, userName: userName, password: password } },
     { returnOriginal: false },
     (err, result) => {
       if (result) {
