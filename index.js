@@ -114,7 +114,7 @@ app.post("/login", (req, res) => {
 });
 1;
 
-app.put("/profile/:id", (req, res) => {
+app.put("/profile/:id", middleware, (req, res) => {
   const userId = req.params.id;
   const name = req.body.name;
   const email = req.body.email;
@@ -122,7 +122,13 @@ app.put("/profile/:id", (req, res) => {
 
   User.findOneAndUpdate({ _id: userId }, { $set: { name: name, email: email, userName: userName } }, { returnOriginal: true }, (err, result) => {
     if (result) {
-      return res.status(200).json({ message: "Başarılı", result: result });
+      User.findOne({ _id: userId }, (err, user) => {
+        const filteredUser = Object.assign({}, user._doc);
+        delete filteredUser.password;
+        delete filteredUser.__v;
+
+        return res.status(200).json({ message: "Başarılı", result: filteredUser });
+      });
     }
     if (err) {
       return res.status(401).json({ message: "Hata" });
