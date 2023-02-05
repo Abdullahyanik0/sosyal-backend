@@ -114,7 +114,7 @@ app.post("/login", (req, res) => {
 });
 1;
 
-app.put("/profile/:id",  (req, res) => {
+app.put("/profile/:id", (req, res) => {
   const userId = req.params.id;
   const name = req.body.name;
   const email = req.body.email;
@@ -131,6 +131,17 @@ app.put("/profile/:id",  (req, res) => {
       });
     }
     if (err) {
+      return res.status(401).json({ message: "Hata" });
+    }
+  });
+});
+
+app.post("/deleteuser/:id", (req, res) => {
+  const userId = req.headers.id;
+  User.remove({ _id: userId }, function (err) {
+    if (!err) {
+      return res.status(200).json({ message: "Hesabınız Silindi." });
+    } else {
       return res.status(401).json({ message: "Hata" });
     }
   });
