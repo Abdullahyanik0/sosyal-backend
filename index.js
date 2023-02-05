@@ -63,15 +63,15 @@ const secretKey = "deneme";
 const tokenExpiresIn = "1h";
 const refreshTokenExpiresIn = "24h";
 
-
 app.post("/register", (req, res) => {
+  const password = req.body.password;
   User.findOne({ email: req.body.email }, (err, user) => {
     if (user) {
       res.status(417).json({ message: "Kullanıcı zaten kayıtlı." });
     } else if (err) {
       res.status(500).json(err);
     } else {
-      bcrypt.hash(req.body.password, 10, (err, hash) => {
+      bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
           res.status(500).json(err);
         } else {
@@ -93,16 +93,19 @@ app.post("/register", (req, res) => {
   });
 });
 
-
 app.post("/login", (req, res) => {
-  User.findOne({ email: req.body.email }, (err, user) => {
-    const password = user.password;
-    if (user && password === req.body.password) {
-      const token = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: tokenExpiresIn });
-      const refreshtoken = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: refreshTokenExpiresIn });
-      res.status(201).json({ message: "Giriş Başarılı", token: token, refreshtoken: refreshtoken, user: user });
-    } else if (user && password !== req.body.password) {
-      res.status(401).json({ message: "Şifren Yanlış" });
+  const email = req.body.email;
+  User.findOne({ email: email }, (err, user) => {
+    if (user) {
+      bcrypt.compare(password, user.password, (err, result) => {
+        if (result) {
+          const token = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: tokenExpiresIn });
+          const refreshtoken = jwt.sign({ id: user._id, email: user.email }, secretKey, { expiresIn: refreshTokenExpiresIn });
+          res.status(201).json({ message: "Giriş Başarılı", token: token, refreshtoken: refreshtoken, user: user });
+        } else {
+          res.status(401).json({ message: "Şifren Yanlış" });
+        }
+      });
     } else {
       res.status(402).json({ message: "Kullanıcı Bulunamadı" });
     }
@@ -116,19 +119,14 @@ app.put("/profile/:id", (req, res) => {
   const userName = req.params.id;
   const password = req.params.id;
 
-  User.findOneAndUpdate(
-    { _id: userId },
-    { $set: { name: name, email: email, userName: userName, password: password } },
-    { returnOriginal: false },
-    (err, result) => {
-      if (result) {
-        return res.status(200).json({ message: "Başarılı" });
-      }
-      if (err) {
-        return res.status(401).json({ message: "Hata" });
-      }
+  User.findOneAndUpdate({ _id: userId }, { $set: { name: name, email: email, userName: userName, password: password } }, { returnOriginal: false }, (err, result) => {
+    if (result) {
+      return res.status(200).json({ message: "Başarılı", result: result });
     }
-  );
+    if (err) {
+      return res.status(401).json({ message: "Hata" });
+    }
+  });
 });
 
 connectDB().then(() => {
