@@ -95,7 +95,7 @@ app.post("/register", (req, res) => {
 
 app.post("/login", (req, res) => {
   const email = req.body.email;
-  const password = req.body.password
+  const password = req.body.password;
   User.findOne({ email: email }, (err, user) => {
     if (user) {
       bcrypt.compare(password, user.password, (err, result) => {
@@ -111,16 +111,15 @@ app.post("/login", (req, res) => {
       res.status(402).json({ message: "Kullanıcı Bulunamadı" });
     }
   });
-});
+});1
 
 app.put("/profile/:id", (req, res) => {
   const userId = req.params.id;
-  const name = req.params.id;
-  const email = req.params.id;
-  const userName = req.params.id;
-  const password = req.params.id;
+  const name = req.body.id;
+  const email = req.body.id;
+  const userName = req.body.id;
 
-  User.findOneAndUpdate({ _id: userId }, { $set: { name: name, email: email, userName: userName, password: password } }, { returnOriginal: false }, (err, result) => {
+  User.findOneAndUpdate({ _id: userId }, { $set: { name: name, email: email, userName: userName } }, { returnOriginal: false }, (err, result) => {
     if (result) {
       return res.status(200).json({ message: "Başarılı", result: result });
     }
