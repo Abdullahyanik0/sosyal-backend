@@ -137,7 +137,7 @@ app.put("/profile/:id", (req, res) => {
 });
 
 app.post("/deleteuser/:id", (req, res) => {
-  const userId = req.headers.id;
+  const userId = req.params.id;
   User.remove({ _id: userId }, function (err) {
     if (!err) {
       return res.status(200).json({ message: "Hesabınız Silindi." });
