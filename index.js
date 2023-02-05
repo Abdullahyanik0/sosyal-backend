@@ -111,15 +111,16 @@ app.post("/login", (req, res) => {
       res.status(402).json({ message: "Kullanıcı Bulunamadı" });
     }
   });
-});1
+});
+1;
 
 app.put("/profile/:id", (req, res) => {
   const userId = req.params.id;
-  const name = req.body.id;
-  const email = req.body.id;
-  const userName = req.body.id;
+  const name = req.body.name;
+  const email = req.body.email;
+  const userName = req.body.userName;
 
-  User.findOneAndUpdate({ _id: userId }, { $set: { name: name, email: email, userName: userName } }, { returnOriginal: false }, (err, result) => {
+  User.findOneAndUpdate({ _id: userId }, { $set: { name: name, email: email, userName: userName } }, { returnOriginal: true }, (err, result) => {
     if (result) {
       return res.status(200).json({ message: "Başarılı", result: result });
     }
