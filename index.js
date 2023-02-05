@@ -58,6 +58,26 @@ const UserSchema = new mongoose.Schema({
   confirm: Boolean,
   created_date: String,
 });
+
+const commentSchema = new mongoose.Schema({
+  text: String,
+  author: String,
+  stars: Boolean,
+});
+
+const BlogsSchema = new mongoose.Schema({
+  title: String,
+  description: String,
+  body: String,
+  image: String,
+  category: String,
+  stars: Number,
+  comments: [commentSchema],
+  readTime: Number,
+  createdAt: Date,
+});
+
+const Blogs = mongoose.model("Blogs", BlogsSchema);
 const User = mongoose.model("User", UserSchema);
 const secretKey = "deneme";
 const tokenExpiresIn = "1h";
@@ -145,6 +165,23 @@ app.post("/deleteuser/:id", (req, res) => {
       return res.status(401).json({ message: "Hata" });
     }
   });
+});
+
+app.get("/blogs", (req, res) => {
+  const limit = req.query.limit ? req.query.limit : 10;
+  const skip = req.query.skip ? req.query.skip : 0;
+
+  Blogs.find({})
+    .skip(skip)
+    .limit(limit)
+    .then((blogPosts) => {
+      res.json(blogPosts);
+      res.status(201).send({ blogs: blogPosts });
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(401).send({ message: "Veriler getirilirken hata oluştu" });
+    });
 });
 
 connectDB().then(() => {
