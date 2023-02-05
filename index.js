@@ -114,7 +114,7 @@ app.post("/login", (req, res) => {
 });
 1;
 
-app.put("/profile/:id", middleware, (req, res) => {
+app.put("/profile/:id",  (req, res) => {
   const userId = req.params.id;
   const name = req.body.name;
   const email = req.body.email;
