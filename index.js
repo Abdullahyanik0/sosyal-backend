@@ -47,7 +47,7 @@ const middleware = (req, res, next) => {
 };
 
 app.get("/", (req, res) => {
-  res.send({ title: "hello" });
+  res.send({ title: "hello world" });
 });
 
 const UserSchema = new mongoose.Schema({
